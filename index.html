@@ -8,10 +8,12 @@
             color: tomato;
         }
 
-        .active, .active a {
+        .active,
+        .active a {
             color: white;
             background-color: tomato;
         }
+
         .active a {
             colo
         }
@@ -35,8 +37,10 @@
             display: inline-block;
             height: 30px;
         }
-        
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             line-height: 0.4em;
         }
     </style>
@@ -60,7 +64,7 @@
 
         <script type="application/javascript">
             let opts = "<option value=''>Show country</option>";
-            
+
             const staticCountryNames = {
                 at: "Austria",
                 be: "Belgium",
@@ -160,6 +164,8 @@
                         let countryNames = jsonObj.countryNames;
 
 
+                        document.getElementById("sign").innerHTML = "<a style='color:white;width:230px;' href='" + jsonObj.signUrl + "'>Sign ECI for UBI</a>";
+
                         let tableRow = [];
                         for (let i = 0; i < countriesJson.length; i++) {
                             let cc = countriesJson[i].countryCode;
@@ -240,8 +246,8 @@
                                         prop.includes("2") ? "Level 2" : (
                                             prop.includes("3") ? "Level 3" : (
                                                 prop.includes("MEP") ? "MEP-goal" : prop
-                                ))))
-                        ));
+                                            ))))
+                            ));
                         sortLabel += prop.includes("Percent") ? " %" : "";
 
                         for (let i = 0; i < tableRow.length; i++) {
@@ -385,10 +391,13 @@
                 <tr>
                     <th colspan="6">
                         <div class="central">
+                            <button id="sign" style="background-color:green;color:white;width:100%"></button>
+
                             <button type="button" id="update" onclick="loadJSONExt()">Update signature count</button>
                         </div>
                     </th>
-                    <th id="POP" style='border: 1px solid black;' colspan="2">TARGET POP <br>- in proportion to the population
+                    <th id="POP" style='border: 1px solid black;' colspan="2">TARGET POP <br>- in proportion to the
+                        population
                     </th>
                     <th id="THR" style='border: 1px solid black;' colspan="4">THRESHOLD<br> (which corresponds
                         to the number of MEPs)</th>
@@ -396,7 +405,8 @@
                     <th id="LEVEL2" style='border: 1px solid black;' colspan="3">Target: LEVEL 2</th>
                     <th id="OPTIMAL" style='border: 1px solid black;' colspan="3">Target: optimized<br>MAIN GOAL</th>
                     <th id="LEVEL3" style='border: 1px solid black;' colspan="3">Target: LEVEL 3</th>
-                    <th id="MEP" style='border: 1px solid black;' colspan="2">TARGET MEP <br>- in proportion to the threshold
+                    <th id="MEP" style='border: 1px solid black;' colspan="2">TARGET MEP <br>- in proportion to the
+                        threshold
                         (and MEPs)</th>
                 </tr>
                 <tr>
