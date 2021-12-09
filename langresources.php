@@ -14,10 +14,10 @@ unset($fromJsonAllDescriptions->descriptions);
 $fromJsonAllDescriptions->description = $arrayOfDescriptions[$language];
 
 
-//echo "{\"country\":$toJson}";
-echo "<pre>";
-print_r($fromJsonLangResource->common->country);
-print_r($fromJsonAllDescriptions);
-echo "</pre>";
+echo "{\"country\":$toJsonLangResource}";
+//echo "<pre>";
+//print_r($fromJsonLangResource->common->country);
+//print_r($fromJsonAllDescriptions);
+//echo "</pre>";
 
 ?>

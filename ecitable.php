@@ -211,7 +211,7 @@ foreach($eciCountriesParsed->signatureCountryCount as $key => $statistics)
             $sortValue = $statistics->totalCount / $newData[$statistics->countryCode]['TargetMEP'];
             
         default:
-            $statistics->percentage;
+            $sortValue = $statistics->percentage;
     }
     
     $statistics->sortValue = $sortValue;
