@@ -17,6 +17,6 @@ if (time() - $lastTime >= 600 && get_headers($robirohi) && !empty(file_get_conte
 	file_put_contents('time', time());
 }
 
-echo file_get_contents('threedays.json');
+$eciDayData = file_get_contents('threedays.json');
 
 ?>

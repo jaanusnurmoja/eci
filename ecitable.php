@@ -1,6 +1,6 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-
+include_once('robirohi.php');
 /*
 // for historical reasons - how the displaying of results started
 $isBefore = date('Ymd', time() - 60*60) < '20200925';
@@ -25,8 +25,8 @@ $eciCountries = file_get_contents("https://eci.ec.europa.eu/014/public/api/repor
 
 $eciCountriesParsed = json_decode($eciCountries);
 
-$threeDaysAgo = date_create(date('Y-m-d'))->modify('-3 days')->format('Ymd');
-$eciDayData = file_get_contents("robirohi.php");
+//$threeDaysAgo = date_create(date('Y-m-d'))->modify('-3 days')->format('Ymd');
+//$eciDayData = file_get_contents("robirohi.php");
 $dAll = json_decode($eciDayData);
 
 $eciTodayData = array_pop($dAll->rows);
@@ -207,10 +207,10 @@ echo '"signUrl":"' . $signUrl . '",';
 echo '"when":"' . date('d.m.Y H:i', time()) . '",';
 echo '"totalVotes":';
 echo $eciSrc . ',';
-echo '"estoniaToday":';
-echo $eciTodayEE . ',';
-echo '"estoniaYesterday":';
-echo $eciYesterdayEE . ',';
+//echo '"estoniaToday":';
+//echo $eciTodayEE . ',';
+//echo '"estoniaYesterday":';
+//echo $eciYesterdayEE . ',';
 echo '"countryVotes":';
 echo json_encode($eciCountriesParsed) . ',';
 echo '"targets":';
