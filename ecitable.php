@@ -26,7 +26,7 @@ $eciCountries = file_get_contents("https://eci.ec.europa.eu/014/public/api/repor
 $eciCountriesParsed = json_decode($eciCountries);
 
 $threeDaysAgo = date_create(date('Y-m-d'))->modify('-3 days')->format('Ymd');
-$eciDayData = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?l=$threeDaysAgo");
+$eciDayData = file_get_contents("robirohi.php");
 $dAll = json_decode($eciDayData);
 
 $eciTodayData = array_pop($dAll->rows);
