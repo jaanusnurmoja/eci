@@ -8,12 +8,10 @@
             color: tomato;
         }
 
-        .active,
-        .active a {
+        .active, .active a {
             color: white;
             background-color: tomato;
         }
-
         .active a {
             colo
         }
@@ -37,10 +35,8 @@
             display: inline-block;
             height: 30px;
         }
-
-        h1,
-        h2,
-        h3 {
+        
+        h1, h2, h3 {
             line-height: 0.4em;
         }
     </style>
@@ -64,7 +60,7 @@
 
         <script type="application/javascript">
             let opts = "<option value=''>Show country</option>";
-
+            
             const staticCountryNames = {
                 at: "Austria",
                 be: "Belgium",
@@ -162,9 +158,9 @@
                         /*document.getElementById("timeDetailed").innerHTML = "<h4>@ " + jsonObj.when + "</h4>";*/
                         /* countriesJson.sort((a, b) => (a.count / a.treshold < b.count / b.treshold) ? 1 : (a.count / a.treshold === b.count / b.treshold) ? ((a.treshold > b.treshold) ? 1 : -1) : -1 ); */
                         let countryNames = jsonObj.countryNames;
-
-
-                        document.getElementById("sign").innerHTML = "<a style='color:white;width:230px;' href='" + jsonObj.signUrl + "'>Sign ECI for UBI</a>";
+						
+				
+						document.getElementById("sign").innerHTML = "<a style='color:white;width:230px;' href='"+jsonObj.signUrl+"'>Sign ECI for UBI</a>";
 
                         let tableRow = [];
                         for (let i = 0; i < countriesJson.length; i++) {
@@ -173,8 +169,8 @@
                             tableRow[i].countryFlag = "<img src='https://www.flagcdn.com/32x24/" + cc + ".png''>";
                             tableRow[i].countryName = countryNames[cc];
                             tableRow[i].signatureCount = countriesJson[i].totalCount;
-                            tableRow[i].today = targets[cc].today;
-                            tableRow[i].yesterday = targets[cc].yesterday;
+                            //tableRow[i].today = typeof(targets[cc].today) != "undefined" ? targets[cc].today : "";
+                            //tableRow[i].yesterday = typeof(targets[cc].yesterday) != "undefined" ? targets[cc].yesterday : "";
                             tableRow[i].targetPop = targets[cc].TargetPop;
                             tableRow[i].targetPopPercentage = parseFloat(100 * countriesJson[i].totalCount / targets[cc].TargetPop).toFixed(2);
                             tableRow[i].threshold = countriesJson[i].treshold;
@@ -246,8 +242,8 @@
                                         prop.includes("2") ? "Level 2" : (
                                             prop.includes("3") ? "Level 3" : (
                                                 prop.includes("MEP") ? "MEP-goal" : prop
-                                            ))))
-                            ));
+                                ))))
+                        ));
                         sortLabel += prop.includes("Percent") ? " %" : "";
 
                         for (let i = 0; i < tableRow.length; i++) {
@@ -293,12 +289,14 @@
                             + "<td style='text-align:right;border: 1px solid black;padding:0 6px'>"
                             + jsonObj.totalVotes.signatureCount
                             + "</td>"
+							/*
                             + "<td style='text-align:right;border: 1px solid black;padding:0 6px'>"
                             + targets.all.today
                             + "</td>"
                             + "<td style='text-align:right;border: 1px solid black;padding:0 6px'>"
                             + targets.all.yesterday
                             + "</td>"
+							*/
                             + "<td style='text-align:right;border: 1px solid black;padding:0 6px' colspan='2'><h4>Total <br>is the goal: "
                             + jsonObj.totalVotes.goal
                             + "<br>, signed: "
@@ -381,7 +379,7 @@
 
         <table id="countryVotesExtended" style="width:100%">
             <colgroup>
-                <col span="6" style="background-color:white">
+                <col span="4" style="background-color:white">
                 <col span="2">
                 <col span="4" style="background-color:white">
                 <col span="6">
@@ -389,15 +387,14 @@
             </colgroup>
             <thead style="width:100%">
                 <tr>
-                    <th colspan="6">
+                    <th colspan="4">
                         <div class="central">
-                            <button id="sign" style="background-color:green;color:white;width:100%"></button>
+							<button id="sign" style="background-color:green;color:white;width:100%"></button>
 
                             <button type="button" id="update" onclick="loadJSONExt()">Update signature count</button>
                         </div>
                     </th>
-                    <th id="POP" style='border: 1px solid black;' colspan="2">TARGET POP <br>- in proportion to the
-                        population
+                    <th id="POP" style='border: 1px solid black;' colspan="2">TARGET POP <br>- in proportion to the population
                     </th>
                     <th id="THR" style='border: 1px solid black;' colspan="4">THRESHOLD<br> (which corresponds
                         to the number of MEPs)</th>
@@ -405,8 +402,7 @@
                     <th id="LEVEL2" style='border: 1px solid black;' colspan="3">Target: LEVEL 2</th>
                     <th id="OPTIMAL" style='border: 1px solid black;' colspan="3">Target: optimized<br>MAIN GOAL</th>
                     <th id="LEVEL3" style='border: 1px solid black;' colspan="3">Target: LEVEL 3</th>
-                    <th id="MEP" style='border: 1px solid black;' colspan="2">TARGET MEP <br>- in proportion to the
-                        threshold
+                    <th id="MEP" style='border: 1px solid black;' colspan="2">TARGET MEP <br>- in proportion to the threshold
                         (and MEPs)</th>
                 </tr>
                 <tr>
@@ -414,11 +410,13 @@
                     <th id="countryCodeExt" style='border:1px solid black;padding:0 6px' colspan="2">Country</th>
                     <th id="countExt" style="border: 1px solid black;padding:0 6px"><a href="#" id="signatureCount"
                             onclick="prop('signatureCount');return false">Signed</a></th>
-                    <th style="border: 1px solid black;padding:0 6px"><a href="#" id="today"
+                    <!--
+					<th style="border: 1px solid black;padding:0 6px"><a href="#" id="today"
                             onclick="prop('today');return false">TD</a></th>
                     <th style="border: 1px solid black;padding:0 6px"><a href="#" id="yesterday"
                             onclick="prop('yesterday');return false">YD</a></th>
-                    <th style='border: 1px solid black;' rowspan="2"><a href="#" id="targetPop"
+                    -->
+					<th style='border: 1px solid black;' rowspan="2"><a href="#" id="targetPop"
                             onclick="prop('targetPop');return false">POP</a></th>
                     <th style='border: 1px solid black;' rowspan="2"><a href="#" id="targetPopPercentage"
                             onclick="prop('targetPopPercentage', true);return false">%</a></th>

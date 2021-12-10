@@ -1,13 +1,9 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-
-/*
-// for historical reasons - how the displaying of results started
 $isBefore = date('Ymd', time() - 60*60) < '20200925';
 $eci = $isBefore ? '012' : '014';
 $testStatement = '"en":"This way the ECI signature counts will be displayed. This example uses data from another ECI - Stop Finning – Stop the Trade - which you may want also sign (the link redirects you there). But since 25 Sept 20 we automatically start displaying own ECI stats",';
 $testStatement .= '"et":"Niisugune hakkab välja nägema toetusavalduste statistika. See näidis kasutab andmeid kodanikualgatusest Ei uimepüügile ja -kaubandusele, millele võite ka alla kirjutada (link viib praegu sinna). 25. septembril 2020 aga lülitub süsteem automaatselt ümber meie algatuse lainele.",';
-*/
 
 $lnJson = file_get_contents("languages.json");
 
@@ -24,38 +20,70 @@ $eciSrc = file_get_contents("https://eci.ec.europa.eu/014/public/api/report/prog
 $eciCountries = file_get_contents("https://eci.ec.europa.eu/014/public/api/report/map");
 
 $eciCountriesParsed = json_decode($eciCountries);
+/*
+$eciDayDataEE = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?c=EE&t=ON");
+$d = json_decode($eciDayDataEE);
+$eciTodayDataEE = array_pop($d->rows);
+$eciTodayEE = isset($eciTodayDataEE->c[1]->v) ? $eciTodayDataEE->c[1]->v : '"no data"';
+$eciYesterdayDataEE = array_pop($d->rows);
+$eciYesterdayEE = isset($eciYesterdayDataEE->c[1]->v) ? $eciYesterdayDataEE->c[1]->v : '"no data"';
+*/
+/*/ temporary workaround for Slovakia
+$eciDayDataSK = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?c=SK&t=ON");
+$dSK = json_decode($eciDayDataSK);
+$eciTodayDataSK = array_pop($dSK->rows);
+$eciTodaySK = isset($eciTodayDataSK->c[1]->v) ? $eciTodayDataSK->c[1]->v : '"no data"';
+$eciYesterdayDataSK = array_pop($dSK->rows);
+$eciYesterdaySK = isset($eciYesterdayDataSK->c[1]->v) ? $eciYesterdayDataSK->c[1]->v : '"no data"';
+*/// end SK
+
+//$eciDayData = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?c=AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,IE,IT,LT,LU,LV,MT,NL,PL,PT,RO,SE,SI&t=ON");
 
 $threeDaysAgo = date_create(date('Y-m-d'))->modify('-3 days')->format('Ymd');
-$eciDayData = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?l=$threeDaysAgo");
-$dAll = json_decode($eciDayData);
-
-$eciTodayData = array_pop($dAll->rows);
-$eciYesterdayData = array_pop($dAll->rows);
-$eciDayBeforeYdData = array_pop($dAll->rows);
-
+//$eciDayData = file_get_contents("https://myaspserver.nl/eci/2020/json-ubi20.asp?l=$threeDaysAgo");
 $newData = [];
-$todaySumValues = [];
-$yesterdaySumValues = [];
-
-$eciTodayEE = 0;
-$eciYesterdayEE = 0;
-
-foreach($dAll->cols as $key => $value)
+/*
+if (!empty ($eciDayData)) 
 {
-	if ($key > 0)
+	$dAll = json_decode($eciDayData);
+
+	$eciTodayData = array_pop($dAll->rows);
+	$eciYesterdayData = array_pop($dAll->rows);
+	$eciDayBeforeYdData = array_pop($dAll->rows);
+
+	$todaySumValues = [];
+	$yesterdaySumValues = [];
+
+	$eciTodayEE = 0;
+	$eciYesterdayEE = 0;
+
+	foreach($dAll->cols as $key => $value)
 	{
-		$cc = strtolower($value->id);
-		$newData[$cc]['today'] = $eciTodayData->c[$key]->v != null ? $eciTodayData->c[$key]->v - $eciYesterdayData->c[$key]->v : 0;
-		$todaySumValues[] = $newData[$cc]['today'];
-		$newData[$cc]['yesterday'] = $eciYesterdayData->c[$key]->v != null ? $eciYesterdayData->c[$key]->v - $eciDayBeforeYdData->c[$key]->v : 0;
-		$yesterdaySumValues[] = $newData[$cc]['yesterday'];
-		
+		if ($key > 0)
+		{
+			$cc = strtolower($value->id);
+			$newData[$cc]['today'] = $eciTodayData->c[$key]->v != null ? $eciTodayData->c[$key]->v - $eciYesterdayData->c[$key]->v : 0;
+			$todaySumValues[] = $newData[$cc]['today'];
+			$newData[$cc]['yesterday'] = $eciYesterdayData->c[$key]->v != null ? $eciYesterdayData->c[$key]->v - $eciDayBeforeYdData->c[$key]->v : 0;
+			$yesterdaySumValues[] = $newData[$cc]['yesterday'];
+			
+		}
 	}
+
+	$eciTodayEE = $newData['ee']['today'];
+	$eciYesterdayEE = $newData['ee']['yesterday'];
 }
+*/
+/*
+// temporary Slovakia
 
-$eciTodayEE = $newData['ee']['today'];
-$eciYesterdayEE = $newData['ee']['yesterday'];
+$newData['sk']['today'] = $eciTodaySK;
+$todaySumValues[] = $newData['sk']['today'];
+$newData['sk']['yesterday'] = $eciYesterdaySK;
+$yesterdaySumValues[] = $newData['sk']['yesterday'];
 
+// end temporary Slovakia
+*/
 $signatureTableData = json_decode(file_get_contents('signatures.json'))->table;
 
 foreach ($signatureTableData as $row)
@@ -123,8 +151,8 @@ foreach ($newData as $key => $row)
 	}
 }
 
-$newData['all']['today'] = array_sum($todaySumValues);
-$newData['all']['yesterday'] = array_sum($yesterdaySumValues);
+///$newData['all']['today'] = array_sum($todaySumValues);
+//$newData['all']['yesterday'] = array_sum($yesterdaySumValues);
 $newData['all']['Level1'] = ['type'=> 'ALL1', 'value' => array_sum($level1SumValues)];
 $newData['all']['Level2'] = ['type'=> 'ALL2', 'value' => array_sum($level2SumValues)];
 $newData['all']['Level3'] = ['type'=> 'ALL3', 'value' => array_sum($level3SumValues)];
@@ -160,12 +188,16 @@ foreach($eciCountriesParsed->signatureCountryCount as $key => $statistics)
         case 'signatureCount': 
             $sortValue = $statistics->totalCount;
             break;
+			/*
         case 'today':
-            $sortValue = $newData[$statistics->countryCode]['today'];
+            if (!empty ($eciDayData)) 
+$sortValue = $newData[$statistics->countryCode]['today'];
             break;
         case 'yesterday':
-            $sortValue = $newData[$statistics->countryCode]['yesterday'];
+            if (!empty ($eciDayData)) 
+$sortValue = $newData[$statistics->countryCode]['yesterday'];
             break;
+			*/
         case 'targetPopPercentage':
             $sortValue = $statistics->totalCount / $newData[$statistics->countryCode]['TargetPop'];
             break;
@@ -207,10 +239,16 @@ echo '"signUrl":"' . $signUrl . '",';
 echo '"when":"' . date('d.m.Y H:i', time()) . '",';
 echo '"totalVotes":';
 echo $eciSrc . ',';
+/*
+if (!empty ($eciDayData)) 
+ {
 echo '"estoniaToday":';
 echo $eciTodayEE . ',';
+
 echo '"estoniaYesterday":';
 echo $eciYesterdayEE . ',';
+}
+*/
 echo '"countryVotes":';
 echo json_encode($eciCountriesParsed) . ',';
 echo '"targets":';
@@ -218,3 +256,4 @@ echo json_encode($newData) . ',';
 echo '"countryNames":';
 echo $countriesJson;
 echo '}';
+?>
